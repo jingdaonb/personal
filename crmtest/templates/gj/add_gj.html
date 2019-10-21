@@ -1,0 +1,28 @@
+{% extends 'example.html' %}
+
+{% block header %}
+
+    <span>跟进记录</span>
+{% endblock %}
+
+{% block  content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form action="" method="post" novalidate>
+                    {% csrf_token %}
+                    {% for foo in form_obj %}
+                        <label for="">{{ foo.label }}</label>
+                        {{ foo }}
+                    {% endfor %}
+                    <input type="submit" class="btn btn-success pull-right" style="margin-top: 20px">
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+

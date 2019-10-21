@@ -1,0 +1,19 @@
+{% extends 'example.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {% for foo in role_obj %}
+            <label for="{{ foo.id_for_label }}">{{ foo.label }}</label>
+            {{ foo }}
+        {% endfor %}
+        <input type="submit" class="btn btn-success pull-right" style="margin-top: 20px">
+    </form>
+
+{% endblock %}
+
+

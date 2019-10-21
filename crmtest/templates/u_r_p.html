@@ -1,0 +1,178 @@
+{% extends 'example.html' %}
+{% load rabc %}
+{% block header %}
+    <span>角色权限管理</span>
+{% endblock %}
+
+{% block content %}
+
+    <div class="luffy-container">
+        <div class="col-md-3 user-area">
+            <div class="panel panel-default">
+            <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <i class="fa fa-address-book-o" aria-hidden="true"></i> 用户信息
+                </div>
+
+                <div class="panel-body">
+                        {% for user in user_objs %}
+                            <ul type="disc">
+                                <li class={% if user.id|safe == uid %}'active'{% endif %}>
+                                    <a href="?uid={{ user.pk }}">{{ user.username }}</a></li>
+                            </ul>
+                        {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3 col-xs-3 role-area">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="postType" value="role">
+                <div class="panel panel-default">
+            <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <i class="fa fa-book" aria-hidden="true"></i> 角色信息
+                    {% if uid %}
+                            <button type="submit" class="btn btn-success btn-xs pull-right"
+                                    style="padding: 2px 8px;margin: -3px;">
+                                <i class="fa fa-save" aria-hidden="true"></i>
+                                保存
+                            </button>
+                    {% endif %}
+                </div>
+                <div class="panel-body" style="color: rgba(0,0,0,0.2);">
+                    提示:点击用户后才能为其分配角色
+                </div>
+
+                <div class="panel-body">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>角色</th>
+                                <th>选择</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for role in role_objs %}
+                            <tr {% if role.id|safe == rid %} class="active"  {% endif %}>
+
+                                <td><a href="?{% gen_role_url request role.id %}">{{ role.name }}</a></td>
+                                <td>
+                                    {% if role.id in role_id_list %}
+                                        <input type="checkbox" name="roles" value="{{ role.id }}" checked/>
+                                    {% else %}
+                                        <input  type="checkbox" name="roles" value="{{ role.id }}"/>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+{##}
+{#                          {% for role in role_objs %}#}
+{#                            <tr>#}
+{#                                <td><a href="">{{ role.name }}</a></td>#}
+{#                                <td><input type="checkbox"></td>#}
+{#                            </tr>#}
+{#                          {% endfor %}#}
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+
+            </div>
+            </form>
+        </div>
+
+        <div class="col-md-6 col-xs-6 permissions-area">
+
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="postType" value="permission">
+                <div class="panel panel-default">
+            <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <i class="fa fa-sitemap" aria-hidden="true"></i> 权限信息
+                    {% if rid %}
+                        <button class="btn btn-success pull-right" style="padding: 2px 8px;margin: -3px;">
+                                <i class="fa fa-save" aria-hidden="true"></i>
+                                保存
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="panel-body" style="color: rgba(0,0,0,0.2);">
+                    提示:点击角色后才能为其分配权限
+                </div>
+
+                <div class="panel-body">
+
+                    <table class="table" id="tbodylast" >
+
+                        <tbody >
+                            <tr>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(function () {
+            bindRootPermissionClick();
+        });
+
+        function bindRootPermissionClick() {
+            $('.permissions-area').on('click', '.root', function () {
+                var caret = $(this).find('i');
+                if (caret.hasClass('fa-caret-right')) {
+                    caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+                    $(this).next().removeClass('hide');
+                } else {
+                    caret.removeClass('fa-caret-down').addClass('fa-caret-right');
+                    $(this).next().addClass('hide');
+
+                }
+            })
+        }
+
+
+        $.ajax({
+            url:"/get_permissions/",
+            type:"get",
+            success:function (res) {
+                console.log(res);
+                $.each(res,function (i,permission) {
+                    console.log(i,permission);
+                    var menu__title=permission['menu__title'];
+                    var menu__pk=permission['menu__pk'];
+                    var url=permission['url'];
+                    var title=permission['title'];
+                    var pk=permission['pk'];
+                    var menus_id=permission['menus_id'];
+                    var s = `<td style='width:100px;'><input  name="permission_id" value='${pk}' type="checkbox">${title}</td>`;
+                    $('#tbodylast tr').append(s);
+                });
+                 var per_id_list={{ per_id_list }}  //[1,2,3,4]
+
+                $.each(per_id_list,function(i,j){
+                    console.log($("[value='"+j+"']")[0]);
+                    $("#tbodylast [value='"+j+"']").prop("checked",true)
+                })
+            }
+
+        })
+    </script>
+{% endblock %}

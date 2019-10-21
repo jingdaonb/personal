@@ -1,0 +1,38 @@
+{% extends 'example.html' %}
+{% block header %}
+    <h1>角色管理</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <a href="{% url 'roleadd' %}" class="btn btn-success">添加</a>
+        <div class="container-fluid">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody >
+                {% for foo in role_obj %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ foo.name }}</td>
+                        <td>
+{#{% url 'roleupdate' foo.pk %}#}
+                            <a href="{% url 'roleupdate' foo.pk %}" class="btn btn-success">修改</a>
+                            <a href="{% url 'roledelete' foo.pk %}" class="btn btn-danger">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+{% endblock %}
+

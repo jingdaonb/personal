@@ -1,0 +1,186 @@
+{% extends 'example.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<h3>录入{{ class_record_obj.class_obj }}day{{ class_record_obj.day_num }}成绩</h3>
+
+
+
+ <div class="panel panel-default">
+        <div class="panel-heading">学习记录</div>
+        <div class="panel-body">
+            <div style="width: 680px;margin: 0 auto;">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    {{ formset.management_form }}  <!-- 这句话一定要加上，固定的昂 -->
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>考勤</th>
+                            <th>作业成绩</th>
+                            <th>作业评语</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for form in formset %}
+                            <tr>
+                                {{ form.id }}
+                                <td>{{ form.instance.student }}</td>
+
+                                <td>{{ form.instance.get_record_display }} </td>
+
+                                <td>{{ form.score }} </td>
+                                <td>{{ form.homework_note }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <input type="submit" value="保存">
+                </form>
+            </div>
+        </div>
+    </div>
+<hr>
+
+
+
+
+
+
+
+
+</body>
+</html>
+{% endblock %}
+{#{% extends 'example.html' %}#}
+{##}
+{#{% block header %}#}
+{#    <span>学生学习记录</span>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <div class="content">#}
+{#        <div class="row">#}
+{#            <div class="col-xs-12">#}
+{#                <div class="box">#}
+{#                    <div class="box-header"></div>#}
+{##}
+{#                        <form action="" method="get" style="display: inline-block" class="pull-right">#}
+{#                            {% csrf_token %}#}
+{##}
+{#                        <a href="" class="btn btn-primary pull-right">添加信息</a>#}
+{#                        </form>#}
+{#                        <form action="" method="post" >#}
+{##}
+{#                            {% csrf_token %}#}
+{#                            {{ formset.management_form }}#}
+{#                            <select name="action" id="" class="form-control pull-left" style="width: 190px;display: inline-block">#}
+{#                                #}
+{##}
+{#                            </select>#}
+{##}
+{#                            <button class="btn btn-default" style="margin-bottom: 5px">go</button>#}
+{#                    <!-- /.box-header -->#}
+{#                        <div class="box-body">#}
+{#                            <table id="example2" class="table table-bordered table-hover">#}
+{#                                <thead>#}
+{#                                <tr>#}
+{#                                    <th><input type="checkbox" id="choose"></th>#}
+{#                                    <th>序号</th>#}
+{#                                    <th>学生</th>#}
+{#                                    <th>课程</th>#}
+{#                                    <th>考勤</th>#}
+{#                                    <th>本节成绩</th>#}
+{#                                    <th>批语</th>#}
+{##}
+{#                                </tr>#}
+{#                                </thead>#}
+{#                                <tbody>#}
+{##}
+{#                                    {% for form in form_obj %}#}
+{#                                        <tr>#}
+{#                                            {{ form.id }}#}
+{#                                            <td>{{ form.instance.student }}</td>#}
+{#                                            <td>{{ form.instance.classstudyrecord }}</td>#}
+{#                                            <td>{{ form.instance.get_record_display }}</td>#}
+{#                                            <td>{{ form.score }}</td>#}
+{#                                            <td>{{ form.homework_note }}</td>#}
+{##}
+{#                                        </tr>#}
+{#                                    {% endfor %}#}
+{##}
+{##}
+{#                                    {% for study in study_obj %}#}
+{#                                        <tr>#}
+{#                                            <td><input type="checkbox" name="selected_id" value="{{ classstudy.pk }}"></td>#}
+{#                                            <td>{{ forloop.counter }}</td>#}
+{#                                            <td>{{ study.student }}</td>#}
+{#                                            <td>{{ study.classstudyrecord }}</td>#}
+{#                                            <td>{{ study.get_record_display }}</td>#}
+{#                                            <td>#}
+{#                                                <select name="score_{{ study.pk }}" id="">#}
+{#                                                    {% for score_c in score_choices %}#}
+{#                                                        {% if study.score == score_c.0 %}#}
+{#                                                            <option value="{{ score_c.0 }}" selected>{{ score_c.1 }}</option>#}
+{#                                                        {% else %}#}
+{#                                                            <option value="{{ score_c.0 }}">{{ score_c.1 }}</option>#}
+{#                                                        {% endif %}#}
+{#                                                    {% endfor %}#}
+{##}
+{#                                                </select>#}
+{##}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                <textarea name="homework_{{ study.pk }}" rows="1">{{ study.homework|default:'' }}</textarea>#}
+{#                                            </td>#}
+{#                                        </tr>#}
+{#                                    {% endfor %}#}
+{##}
+{#                                </tbody>#}
+{#                            </table>#}
+{#                        <input type="submit"  class="btn btn-success pull-right" style="margin-top: 20px">#}
+{#                        </div>#}
+{#                    </form>#}
+{#                    <!-- /.box-body -->#}
+{#                </div>#}
+{##}
+{#                <!-- /.box -->#}
+{#            </div>#}
+{#            <!-- /.col -->#}
+{#        </div>#}
+{#        <!-- /.row -->#}
+{#    </div>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#{% endblock %}#}
+{##}
+{#{% block js %}#}
+{#    <script>#}
+{#        $('#choose').click(function () {#}
+{#            var status=$(this).prop('checked');#}
+{#            $('[name=selected_id]').prop('checked',status)#}
+{#        })#}
+{##}
+{#    </script>#}
+{##}
+{##}
+{#{% endblock %}#}
+{##}
+{##}
+{##}
+{##}
+
